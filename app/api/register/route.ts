@@ -1,28 +1,22 @@
-import { createClient } from '@supabase/supabase-js'
-import { type NextRequest, NextResponse } from 'next/server'
-
-// ✅ Validate env variables
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-  throw new Error("❌ Missing Supabase environment variables.")
-}
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-)
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!
+);
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    const { name, email, phone, fileUrl } = body
+    const { name, email, phone, fileUrl } = await req.json();
 
-    console.log("📥 Received data:", body)
+    console.log("📥 Received data:", { name, email, phone, fileUrl });
 
     if (!name || !email || !phone || !fileUrl) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
-      )
+      );
     }
 
     const { data, error } = await supabase.from('registrations').insert([
@@ -32,39 +26,26 @@ export async function POST(req: NextRequest) {
         phone,
         file_url: fileUrl,
       },
-    ])
+    ]);
 
     if (error) {
-      console.error("❌ Supabase insert error:", error)
+      console.error('❌ Supabase insert error:', error.message, error.details, error.hint);
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Database insert failed',
-          details: error.message,
-        },
+        { success: false, error: 'Database insert failed' },
         { status: 500 }
-      )
+      );
     }
-
-    console.log("✅ Supabase insert success:", data)
 
     return NextResponse.json({
       success: true,
       message: 'Registration successful!',
       id: data?.[0]?.id,
-    })
-  } catch (err: any) {
-    console.error("❌ Unexpected error:", err.message || err)
+    });
+  } catch (error) {
+    console.error('❌ Unexpected error:', error);
     return NextResponse.json(
-      { success: false, error: 'Unexpected server error' },
+      { success: false, error: 'Server error' },
       { status: 500 }
-    )
+    );
   }
-}
-
-export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: 'E-Cell FRCRCE Registration API is live!',
-  })
 }
