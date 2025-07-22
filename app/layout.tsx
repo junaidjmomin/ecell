@@ -4,8 +4,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "E-Cell FRCRCE",
-  description: "The Entrepreneurship Cell of Fr. Conceicao Rodrigues College of Engineering",
-    generator: 'v0.dev'
+  description: "The Entrepreneurship Cell of Fr. Conceicao Rodrigues College of Engineering"
 }
 
 export default function RootLayout({
