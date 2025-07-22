@@ -167,8 +167,8 @@ export default function ECellFRCRCE() {
                 <Image
                   src="/images/ecell-logo.png"
                   alt="E-Cell FRCRCE Logo"
-                  width={80} // Made smaller as requested
-                  height={32} // Adjusted height
+                  width={80} 
+                  height={32} 
                   className="h-auto"
                 />
               </div>
